@@ -1,10 +1,5 @@
 package com.ordertracking.order_tracking.repository;
 
-public class UserRepository {
-    
-}
-package com.ordertracking.order_tracking.repository;
-
 import com.ordertracking.order_tracking.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

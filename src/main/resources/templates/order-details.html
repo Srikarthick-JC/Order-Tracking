@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Details</title>
+</head>
+<body>
+  <h2>Order #<span th:text="${order.orderId}"></span></h2>
+  <p>User ID: <span th:text="${order.user.userId}"></span></p>
+  <p>Total Amount: <span th:text="${order.totalAmount}"></span></p>
+  <p>Current Status: <span th:text="${order.currentStatus}"></span></p>
+
+  <h3>Status Logs</h3>
+  <ul>
+    <li th:each="log : ${logs}">
+      <b th:text="${log.status}"></b> -
+      <span th:text="${log.remarks}"></span>
+      (<span th:text="${#dates.format(log.timestamp, 'dd-MM-yyyy HH:mm')}"></span>)
+    </li>
+  </ul>
+
+  <h3>Update Status</h3>
+  <form th:action="@{'/orders/' + ${order.orderId} + '/update-status'}" method="post">
+    <label>Status:</label>
+    <input type="text" name="status" placeholder="Shipped, Delivered, etc." required><br>
+    <label>Updated By (User ID):</label>
+    <input type="number" name="updatedBy" required><br>
+    <label>Remarks:</label>
+    <input type="text" name="remarks" required><br>
+    <button type="submit">Update Status</button>
+  </form>
+
+  <br>
+  <a href="/">← Back to Orders</a>
+</body>
+</html>

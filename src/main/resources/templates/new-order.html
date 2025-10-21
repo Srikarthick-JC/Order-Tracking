@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>New Order</title>
+</head>
+<body>
+  <h2>Create New Order</h2>
+
+  <form action="/orders/save" method="post">
+    <label>User ID:</label>
+    <input type="number" name="userId" required><br><br>
+
+    <h3>Order Items</h3>
+    <div>
+      <label>Product Name:</label>
+      <input type="text" name="productName" required>
+      <label>Quantity:</label>
+      <input type="number" name="quantity" required>
+      <label>Price:</label>
+      <input type="number" step="0.01" name="price" required>
+    </div>
+
+    <br>
+    <button type="submit">Save Order</button>
+  </form>
+  <br>
+  <a href="/">← Back to Orders</a>
+</body>
+</html>
