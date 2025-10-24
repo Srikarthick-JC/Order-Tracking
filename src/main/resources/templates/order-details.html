@@ -3,34 +3,142 @@
 <head>
   <meta charset="UTF-8">
   <title>Order Details</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e6f0ff, #ffffff);
+      margin: 0;
+      color: #1a1a2e;
+    }
+
+    header {
+      background: #0056ff;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    main {
+      width: 70%;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f6ff;
+      border-bottom: 2px solid #0056ff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9ff;
+    }
+
+    .status-form {
+      background: #f2f6ff;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      animation: slideIn 0.6s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button, .button {
+      background-color: #0056ff;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+
+    button:hover, .button:hover {
+      background-color: #003fcc;
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+  </style>
 </head>
 <body>
-  <h2>Order #<span th:text="${order.orderId}"></span></h2>
-  <p>User ID: <span th:text="${order.user.userId}"></span></p>
-  <p>Total Amount: <span th:text="${order.totalAmount}"></span></p>
-  <p>Current Status: <span th:text="${order.currentStatus}"></span></p>
 
-  <h3>Status Logs</h3>
-  <ul>
-    <li th:each="log : ${logs}">
-      <b th:text="${log.status}"></b> -
-      <span th:text="${log.remarks}"></span>
-      (<span th:text="${#dates.format(log.timestamp, 'dd-MM-yyyy HH:mm')}"></span>)
-    </li>
-  </ul>
+  <header>🛰️ Order Details</header>
 
-  <h3>Update Status</h3>
-  <form th:action="@{'/orders/' + ${order.orderId} + '/update-status'}" method="post">
-    <label>Status:</label>
-    <input type="text" name="status" placeholder="Shipped, Delivered, etc." required><br>
-    <label>Updated By (User ID):</label>
-    <input type="number" name="updatedBy" required><br>
-    <label>Remarks:</label>
-    <input type="text" name="remarks" required><br>
-    <button type="submit">Update Status</button>
-  </form>
+  <main>
+    <h2>Order #<span th:text="${order.orderId}"></span></h2>
+    <p><b>User ID:</b> <span th:text="${order.user.userId}"></span></p>
+    <p><b>Total Amount:</b> ₹<span th:text="${order.totalAmount}"></span></p>
+    <p><b>Current Status:</b> <span th:text="${order.currentStatus}"></span></p>
 
-  <br>
-  <a href="/">← Back to Orders</a>
+    <h3>Status History</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Remarks</th>
+          <th>Updated By</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="log : ${logs}">
+          <td th:text="${log.status}"></td>
+          <td th:text="${log.remarks}"></td>
+          <td th:text="${log.updatedBy.userId}"></td>
+          <td th:text="${#dates.format(log.timestamp, 'dd-MM-yyyy HH:mm')}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="status-form">
+      <h3>Update Order Status</h3>
+      <form th:action="@{'/orders/' + ${order.orderId} + '/update-status'}" method="post">
+        <label>Status:</label>
+        <input type="text" name="status" placeholder="Shipped, Delivered, etc." required>
+
+        <label>Updated By (User ID):</label>
+        <input type="number" name="updatedBy" required>
+
+        <label>Remarks:</label>
+        <textarea name="remarks" rows="3" required></textarea>
+
+        <button type="submit">Update Status</button>
+      </form>
+    </div>
+
+    <div style="margin-top:1.5rem;">
+      <a href="/" class="button">← Back to Orders</a>
+    </div>
+  </main>
+
 </body>
 </html>

@@ -53,7 +53,7 @@ public class OrderService {
         return savedOrder;
     }
 
-    // ✅ Update order status (e.g., Shipped, Delivered, Cancelled)
+    // ✅ Update order status
     public OrderStatusLog updateOrderStatus(Long orderId, String status, Long updatedById, String remarks) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new EntityNotFoundException("Order not found"));
@@ -92,5 +92,18 @@ public class OrderService {
     // ✅ Get all orders (for admin)
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    // 🗑️ Delete order with its items and logs
+    public void deleteOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        // Delete related data first
+        statusLogRepository.deleteAll(statusLogRepository.findByOrder_OrderIdOrderByTimestampAsc(orderId));
+        orderItemRepository.deleteAll(orderItemRepository.findByOrder_OrderId(orderId));
+
+        // Delete the order itself
+        orderRepository.delete(order);
     }
 }

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Register - Order Tracking System</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #2e8b57, #228b22, #32cd32);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+      margin: 0;
+      padding: 0;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 450px;
+      animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e8b57;
+      margin-bottom: 2rem;
+      font-size: 2.2rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #2e8b57;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #ffffff;
+      color: #333;
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2e8b57;
+      box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .role-select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e8b57' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 16px;
+      padding-right: 45px;
+      appearance: none;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #2e8b57, #228b22);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(46, 139, 87, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .login-link a {
+      color: #2e8b57;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .login-link a:hover {
+      color: #228b22;
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #c62828;
+      font-size: 0.9rem;
+    }
+
+    .success-message {
+      background: #e8f5e8;
+      color: #2e7d32;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid #2e7d32;
+      font-size: 0.9rem;
+    }
+
+    /* Floating particles animation */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: 1s; }
+    .particle:nth-child(3) { width: 3px; height: 3px; left: 30%; animation-delay: 2s; }
+    .particle:nth-child(4) { width: 5px; height: 5px; left: 40%; animation-delay: 3s; }
+    .particle:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-delay: 4s; }
+    .particle:nth-child(6) { width: 3px; height: 3px; left: 60%; animation-delay: 5s; }
+    .particle:nth-child(7) { width: 5px; height: 5px; left: 70%; animation-delay: 6s; }
+    .particle:nth-child(8) { width: 4px; height: 4px; left: 80%; animation-delay: 7s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      10% { transform: translateY(50vh) rotate(90deg); }
+      90% { transform: translateY(10vh) rotate(270deg); }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="container">
+    <h1>🌱 Join OrderTrack</h1>
+
+    <div th:if="${error}" class="error-message">
+      <span th:text="${error}"></span>
+    </div>
+
+    <form action="/register" method="post">
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Create a strong password">
+      </div>
+
+      <div class="form-group">
+        <label for="role">Account Type</label>
+        <select id="role" name="role" class="role-select" required>
+          <option value="">Select your role</option>
+          <option value="USER">Customer</option>
+          <option value="ADMIN">Administrator</option>
+        </select>
+      </div>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <div class="login-link">
+      Already have an account? <a href="/login">Sign In</a>
+    </div>
+  </div>
+
+  <script>
+    // Add smooth focus animations
+    document.querySelectorAll('input, select').forEach(element => {
+      element.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+      });
+
+      element.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+      });
+    });
+
+    // Password strength indicator
+    document.getElementById('password').addEventListener('input', function() {
+      const password = this.value;
+      const strength = password.length >= 8 ? 'strong' : password.length >= 6 ? 'medium' : 'weak';
+      this.style.borderColor = strength === 'strong' ? '#2e8b57' : strength === 'medium' ? '#ffa726' : '#e53935';
+    });
+  </script>
+</body>
+</html>

@@ -2,29 +2,184 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>New Order</title>
+  <title>Create New Order</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #e6f0ff, #ffffff);
+      margin: 0;
+      color: #1a1a2e;
+    }
+
+    header {
+      background: #0056ff;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    main {
+      width: 50%;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 5px;
+    }
+
+    button, .button {
+      background-color: #0056ff;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+
+    button:hover, .button:hover {
+      background-color: #003fcc;
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .item-block {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #f2f6ff;
+      border-radius: 8px;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(-20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .actions {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .remove-btn {
+      background: #ff4c4c;
+      margin-left: 10px;
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+
+    .remove-btn:hover {
+      background: #c40000;
+      transform: scale(1.05);
+      box-shadow: 0 4px 8px rgba(255, 76, 76, 0.3);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-20px); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+  </style>
 </head>
 <body>
-  <h2>Create New Order</h2>
 
-  <form action="/orders/save" method="post">
-    <label>User ID:</label>
-    <input type="number" name="userId" required><br><br>
+  <header>🛰️ Add New Order</header>
 
-    <h3>Order Items</h3>
-    <div>
-      <label>Product Name:</label>
-      <input type="text" name="productName" required>
-      <label>Quantity:</label>
-      <input type="number" name="quantity" required>
-      <label>Price:</label>
-      <input type="number" step="0.01" name="price" required>
+  <main>
+    <form id="orderForm" action="/orders/save" method="post" onsubmit="return validateForm()">
+      <label>User ID:</label>
+      <input type="number" name="userId" id="userId" required placeholder="Enter an existing user ID (e.g., 1)">
+
+      <div id="items-section">
+        <div class="item-block">
+          <label>Product Name:</label>
+          <input type="text" name="productName" required>
+          <label>Quantity:</label>
+          <input type="number" name="quantity" min="1" required>
+          <label>Price:</label>
+          <input type="number" step="0.01" name="price" min="0" required>
+          <button type="button" class="remove-btn" onclick="removeItem(this)">Remove</button>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" onclick="addItem()">+ Add Another Item</button>
+        <button type="submit">💾 Save Order</button>
+      </div>
+    </form>
+
+    <div class="actions">
+      <a href="/" class="button">← Back to Orders</a>
     </div>
+  </main>
 
-    <br>
-    <button type="submit">Save Order</button>
-  </form>
-  <br>
-  <a href="/">← Back to Orders</a>
+  <script>
+    // ➕ Add new item
+    function addItem() {
+      const section = document.getElementById('items-section');
+      const block = document.createElement('div');
+      block.classList.add('item-block', 'fade-in');
+      block.innerHTML = `
+        <label>Product Name:</label>
+        <input type="text" name="productName" required>
+        <label>Quantity:</label>
+        <input type="number" name="quantity" min="1" required>
+        <label>Price:</label>
+        <input type="number" step="0.01" name="price" min="0" required>
+        <button type="button" class="remove-btn" onclick="removeItem(this)">Remove</button>
+      `;
+      section.appendChild(block);
+    }
+
+    // ❌ Remove item block
+    function removeItem(button) {
+      const block = button.closest('.item-block');
+      block.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => block.remove(), 300);
+    }
+
+    // 🧠 Validate before submit
+    function validateForm() {
+      const userId = document.getElementById('userId').value;
+      if (!userId) {
+        alert('⚠️ Please enter a valid User ID.');
+        return false;
+      }
+      const items = document.querySelectorAll('.item-block');
+      if (items.length === 0) {
+        alert('⚠️ Please add at least one item.');
+        return false;
+      }
+      return true;
+    }
+  </script>
+
 </body>
 </html>

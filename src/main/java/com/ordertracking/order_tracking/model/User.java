@@ -2,7 +2,7 @@ package com.ordertracking.order_tracking.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -23,7 +23,10 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String role; // e.g. "Customer" or "Admin"
+    private String password;
 
-    private Instant joinDate = Instant.now();
+    @Column(nullable = false)
+    private String role; // "USER" or "ADMIN"
+
+    private LocalDateTime joinDate = LocalDateTime.now();
 }
